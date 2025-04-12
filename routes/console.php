@@ -17,3 +17,12 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+//调用方式 ，添加自定义命令，框架会自动调用
+//php artisan maakess:test
+Artisan::command('maakess:test', function () {
+    $this->info("测试命令已调用");//输出信息
+    $this->comment("测试命令已调用"); //输出带颜色的信息
+})->purpose('测试命令');
+Artisan::command('mail:send {user}', function (string $user) {
+    $this->info("Sending email to: {$user}!");
+});

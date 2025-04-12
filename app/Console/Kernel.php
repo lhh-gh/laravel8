@@ -16,10 +16,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        //每分钟执行一次 ，失效超过15分钟未支付订单
+        $schedule->command("maakes:cancel-order")->withoutOverlapping()->everyMinute();
+        // 每天00:00  执行一次 重置短信发送次数
+        $schedule->command("maakes:reset-sms-count")->daily();
     }
 
     /**
-     * Register the commands for the application.
+     * 注册闭包命令
      *
      * @return void
      */
