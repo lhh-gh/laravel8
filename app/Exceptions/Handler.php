@@ -8,12 +8,12 @@ use Throwable;
 class Handler extends ExceptionHandler
 {
     /**
-     * A list of the exception types that are not reported.
-     *
+     * 禁止记录日志
      * @var array<int, class-string<Throwable>>
      */
     protected $dontReport = [
         //
+        BusinessException::class,
     ];
 
     /**
@@ -37,5 +37,18 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+    public function render($request, Throwable $e)
+    {
+        // 处理 BusinessException
+        if ($e instanceof BusinessException) {
+            return response()->json([
+                'code' => $e->getCode(),     // 业务错误码
+                'message' => $e->getMessage(),
+                'data' => $e->getData(),
+            ], $e->getStatusCode());         // HTTP 状态码
+        }
+
+        return parent::render($request, $e);
     }
 }
